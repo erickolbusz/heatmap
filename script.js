@@ -4,20 +4,33 @@ var heatmap = h337.create({
   radius: 5
 });
 
-var genHeat = function(f,dx=10,dy=10) {
+MINX = -5;
+MAXX = 5;
+MINY = -3;
+MAXY = 3;
+
+DX = 5;
+DY = 5;
+
+var pixelToCoord = function(px,py) {
+
+}
+var genHeat = function(f) {
   //generate heatmap for f(x,y) given coords on screen
   var points = [];
   var max = -1*Infinity;
   var min = Infinity;
-  var val;
-  for (var x=0; x<window.innerWidth; x+=dx) {
-    for (var y=0; y<window.innerHeight; y+=dy) {
+  var val, x, y;
+  for (var px=0; px<window.innerWidth; px+=DX) {
+    for (var py=0; py<window.innerHeight; py+=DY) {
+      x = (px/window.innerWidth)*MAXX + (1-(px/window.innerWidth))*MINX;
+      y = (py/window.innerHeight)*MAXY + (1-(py/window.innerHeight))*MINY;
       val = f.evaluate( {x:x, y:y} );
       if (val > max) { max = val; }
       if (val < min) { min = val; }
       points.push({
-        x: x,
-        y: y,
+        x: px,
+        y: py,
         value: val
       });
     }
