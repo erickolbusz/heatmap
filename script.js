@@ -4,7 +4,7 @@ var heatmap = h337.create({
   radius: 5
 });
 
-var genHeat = function(dx=10,dy=10) {
+var genHeat = function(f,dx=10,dy=10) {
   //generate heatmap for f(x,y) given coords on screen
   var points = [];
   var max = -1*Infinity;
@@ -12,7 +12,7 @@ var genHeat = function(dx=10,dy=10) {
   var val;
   for (var x=0; x<window.innerWidth; x+=dx) {
     for (var y=0; y<window.innerHeight; y+=dy) {
-      val = x*y;
+      val = f.evaluate( {x:x, y:y} );
       if (val > max) { max = val; }
       if (val < min) { min = val; }
       points.push({
@@ -26,4 +26,13 @@ var genHeat = function(dx=10,dy=10) {
   return {max: max, min: min, data: points};
 }
 
-heatmap.setData(genHeat());
+var plotFunction = function() {
+  var equation = math.simplify(document.querySelector('#funcBox').value);
+  heatmap.setData(genHeat(equation));
+}
+
+document.querySelector('#funcButton').onclick = plotFunction;
+
+//init
+document.querySelector('#funcBox').value = "x+500*cos(y)";
+plotFunction();
